@@ -1,164 +1,102 @@
 <div align="center">
+  <img src="https://raw.githubusercontent.com/GhostPointerX/AquaTrace/main/frontend/assets/logo.png" alt="AquaTrace Logo" width="100" />
+  <h1>AquaTrace 🌊</h1>
+  <p><strong>Who spilled the oil? Let's look at the data.</strong></p>
 
-# 🌊 AquaTrace
-
-**Advanced Satellite Oil Spill Detection & AIS Vessel Correlation Engine**
-
-<p>
-  <a href="https://github.com/GhostPointerX/AquaTrace/stargazers"><img src="https://img.shields.io/github/stars/GhostPointerX/AquaTrace?style=for-the-badge&color=00A8E8" alt="Stars" /></a>
-  <a href="https://github.com/GhostPointerX/AquaTrace/network/members"><img src="https://img.shields.io/github/forks/GhostPointerX/AquaTrace?style=for-the-badge&color=D4A373" alt="Forks" /></a>
-  <a href="https://github.com/GhostPointerX/AquaTrace/issues"><img src="https://img.shields.io/github/issues/GhostPointerX/AquaTrace?style=for-the-badge&color=EF4444" alt="Issues" /></a>
-  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge&color=2B2D42" alt="License" /></a>
-</p>
-
+  <p>
+    <a href="https://github.com/GhostPointerX/AquaTrace/stargazers"><img src="https://img.shields.io/github/stars/GhostPointerX/AquaTrace?style=for-the-badge&color=00A8E8" alt="Stars" /></a>
+    <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge&color=2B2D42" alt="License" /></a>
+  </p>
 </div>
 
 <br />
 
-## 📖 Overview
+## The Problem
+A dark patch appears on a Sentinel-1 satellite image. It's an oil slick. But by the time the satellite captures it, the ship responsible is long gone. 
 
-**AquaTrace** is an intelligent, high-performance platform designed to track, analyze, and attribute marine oil spills. By synthesizing **Sentinel-1 Synthetic Aperture Radar (SAR)** satellite imagery with **real-time Automatic Identification System (AIS)** vessel trajectories, AquaTrace automatically detects oil slicks and runs a sophisticated 5-factor scoring model to rank likely polluting vessels.
+## The Solution
+**AquaTrace** correlates static SAR (Synthetic Aperture Radar) satellite imagery with dynamic, real-time AIS (Automatic Identification System) vessel trajectories. We backtrack the oil slick's drift, overlay historical ship tracks, and run a 5-factor scoring model to mathematically isolate the culprit.
 
-Whether for environmental protection agencies, maritime law enforcement, or research institutions, AquaTrace provides an unprecedented level of insight into maritime incidents.
+No guessing. Just data.
 
 ---
 
-## ✨ Features
+## 🛠 Under the Hood
 
 <table>
   <tr>
     <td width="50%">
-      <h3>📡 Real-Time Live Tracking</h3>
-      <p>Connects to global AIS streams via WebSockets to visualize thousands of active ships worldwide in real-time, providing immediate situational awareness.</p>
+      <h3>📡 Live AIS Radar</h3>
+      <p>We hook directly into WebSocket AIS streams to track global ship movements in real-time. Built on Node.js for high-throughput stream processing.</p>
     </td>
     <td width="50%">
-      <h3>⚖️ Advanced Attribution Engine</h3>
-      <p>Powered by Python, our 5-factor heuristic algorithm evaluates Spatial Proximity, Temporal Proximity, Trajectory Alignment, Drift, and Behavioral Anomalies to calculate a confidence score (0-100) for every suspect vessel.</p>
+      <h3>🧠 5-Factor Attribution</h3>
+      <p>A Python-powered heuristic engine that scores suspect vessels based on Spatial Proximity, Temporal overlap, Trajectory, Drift vectors, and AIS dark-activity (gaps/anomalies).</p>
     </td>
   </tr>
   <tr>
     <td width="50%">
-      <h3>🗺️ Brutalist Interactive UI</h3>
-      <p>A beautiful, modular dashboard built with Vanilla JavaScript, Leaflet.js, and a bespoke brutalist design system (TailwindCSS) for rapid, intuitive data exploration.</p>
+      <h3>🗺️ Brutalist UI</h3>
+      <p>A no-nonsense, hardware-accelerated map interface. Vanilla JS, Leaflet.js, and a bespoke brutalist design system using TailwindCSS. It's fast, modular, and looks badass.</p>
     </td>
     <td width="50%">
-      <h3>🛰️ Satellite SAR Integration</h3>
-      <p>Cross-references precise coordinates and timestamps of detected oil spills (e.g., from Sentinel-1 imagery) to build precise backtrack drift paths.</p>
+      <h3>🛰️ SAR Integration</h3>
+      <p>Pinpoint accuracy. Cross-reference precise coordinates and timestamps of detected oil spills directly onto the maritime grid.</p>
     </td>
   </tr>
 </table>
 
 ---
 
-## 🏗️ System Architecture
+## 🏗 Architecture
 
-AquaTrace employs a decoupled, highly modular architecture combining a high-throughput Node.js streaming server with a rigorous Python data science backend.
+A decoupled, three-tier setup:
 
 ```mermaid
 graph TD
-    subgraph "Frontend Dashboard"
-    UI[Browser UI]
-    Map[Leaflet Map Render]
-    UI <--> Map
-    end
-
-    subgraph "Real-Time Tracking"
-    Node[Node.js Server] <-->|REST / WSS| UI
-    Node <-->|WSS| AISStream[AISStream.io]
-    end
+    UI[Brutalist Frontend] <-->|WSS / REST| Node[Node.js Tracker]
+    Node <-->|Raw AIS| AISStream[AISStream.io]
     
-    subgraph "Attribution Pipeline"
-    CSV[Historical AIS Data] --> Engine[Python Scoring Engine]
-    Engine -->|Ranked Suspects| JSON[candidates.json]
-    JSON --> UI
-    end
+    CSV[Historical AIS] --> Engine[Python Scoring Engine]
+    Engine -->|JSON Profiles| UI
 ```
 
 ---
 
-## 🚀 Quick Start Guide
+## 🚀 Get Started
 
-Getting AquaTrace running locally is incredibly simple. The project is split into three independent services.
+AquaTrace is split into three independent services. Run what you need.
 
-### 1️⃣ Start the Real-Time Server (Node.js)
-Powers the live global vessel tracker.
-
+### 1. The Tracker (Node.js)
+Fires up the WebSocket listener for live global tracking.
 ```bash
 cd live_track_ship
 npm install
-
-# Setup environment variables
-cp ../.env.example ../.env
-# IMPORTANT: Edit ../.env and add your AISSTREAM_API_KEY
-
+cp ../.env.example ../.env  # Add your AISSTREAM_API_KEY here
 npm start
 ```
-*The server will spin up on `http://localhost:3001`.*
+*Listens on `localhost:3001`.*
 
-### 2️⃣ Run the Attribution Engine (Python)
-Processes historical AIS data to identify oil spill culprits.
-
+### 2. The Engine (Python)
+Crunches historical data to find the polluter.
 ```bash
 cd aquatrace_ais
 pip install -r requirements.txt
-
-# Execute the 5-factor scoring model
 python run_attribution.py
 ```
-*Analyzed results are generated and stored in `outputs/attribution/candidates.json`.*
+*Dumps results into `outputs/attribution/candidates.json`.*
 
-### 3️⃣ Launch the Dashboard
-No build steps required for the UI. Just open the `index.html` file in your preferred modern web browser.
-
-```bash
-# MacOS
-open frontend/index.html
-
-# Windows
-start frontend/index.html
-```
+### 3. The Dashboard (Frontend)
+No build steps. No Webpack. Just pure frontend. 
+Open `frontend/index.html` in any modern browser and you're good to go.
 
 ---
 
-## 📂 Project Structure
+## 🤝 Want to help?
 
-```text
-AquaTrace/
-├── frontend/                   # 🖥️ User Interface (Vanilla JS, CSS, Leaflet)
-├── aquatrace_ais/              # 🧠 Python Attribution Analytics Engine
-├── live_track_ship/            # 🌐 Node.js Live WebSocket Server
-├── data/                       # 📁 Raw AIS input datasets
-├── outputs/                    # 📊 Generated AI/Attribution reports
-├── docs/                       # 📚 Architecture & System Documentation
-└── scripts/                    # ⚙️ Utility startup scripts
-```
+We like pull requests. Read our [CONTRIBUTING.md](CONTRIBUTING.md) to get the local setup running, pick an issue, and submit a PR.
 
----
-
-## ⚙️ Configuration
-
-Configure the environment by copying `.env.example` to `.env` in the root directory.
-
-| Environment Variable | Required | Default | Description |
-|----------------------|:--------:|---------|-------------|
-| `AISSTREAM_API_KEY`  |   ✅   | *None*  | Your API key from AISStream.io |
-| `PORT`               |   ❌   | `3001`  | Port for the Node.js backend |
-| `VESSEL_STALE_TIMEOUT_MS` | ❌ | `7200000` | Timeout (2 hours) before dropping stale vessels |
-
----
-
-## 🤝 Contributing
-
-We welcome contributions from the community! If you're interested in improving AquaTrace:
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
----
-
+<br>
 <div align="center">
-  <p>Built with 🩵 for the oceans.</p>
-  <p>&copy; 2026 AquaTrace Team</p>
+  <p>Built for the oceans. Open sourced for everyone.</p>
 </div>
