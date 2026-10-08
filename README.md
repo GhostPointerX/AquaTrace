@@ -1,102 +1,143 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/GhostPointerX/AquaTrace/main/frontend/assets/logo.png" alt="AquaTrace Logo" width="100" />
-  <h1>AquaTrace 🌊</h1>
-  <p><strong>Who spilled the oil? Let's look at the data.</strong></p>
+  <img src="assets/logo.png" alt="AquaTrace Logo" width="600" />
+
+  <br />
+  <br />
+
+  **High-Precision AIS Maritime Attribution & Trajectory Engine**
 
   <p>
     <a href="https://github.com/GhostPointerX/AquaTrace/stargazers"><img src="https://img.shields.io/github/stars/GhostPointerX/AquaTrace?style=for-the-badge&color=00A8E8" alt="Stars" /></a>
+    <a href="https://github.com/GhostPointerX/AquaTrace/network/members"><img src="https://img.shields.io/github/forks/GhostPointerX/AquaTrace?style=for-the-badge&color=D4A373" alt="Forks" /></a>
+    <a href="https://github.com/GhostPointerX/AquaTrace/issues"><img src="https://img.shields.io/github/issues/GhostPointerX/AquaTrace?style=for-the-badge&color=EF4444" alt="Issues" /></a>
     <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge&color=2B2D42" alt="License" /></a>
   </p>
 </div>
 
 <br />
 
-## The Problem
-A dark patch appears on a Sentinel-1 satellite image. It's an oil slick. But by the time the satellite captures it, the ship responsible is long gone. 
+## 📖 Executive Overview
 
-## The Solution
-**AquaTrace** correlates static SAR (Synthetic Aperture Radar) satellite imagery with dynamic, real-time AIS (Automatic Identification System) vessel trajectories. We backtrack the oil slick's drift, overlay historical ship tracks, and run a 5-factor scoring model to mathematically isolate the culprit.
+**AquaTrace** is an advanced, high-performance platform designed to track, analyze, and attribute marine oil spills. By synthesizing **Sentinel-1 Synthetic Aperture Radar (SAR)** satellite imagery with **real-time Automatic Identification System (AIS)** vessel trajectories, AquaTrace automatically detects oil slicks and runs a sophisticated 5-factor scoring model to rank likely polluting vessels.
 
-No guessing. Just data.
+Built for environmental protection agencies, maritime law enforcement, and research institutions, AquaTrace provides unprecedented transparency into maritime incidents.
 
 ---
 
-## 🛠 Under the Hood
+## ✨ Core Capabilities
 
-<table>
-  <tr>
-    <td width="50%">
-      <h3>📡 Live AIS Radar</h3>
-      <p>We hook directly into WebSocket AIS streams to track global ship movements in real-time. Built on Node.js for high-throughput stream processing.</p>
-    </td>
-    <td width="50%">
-      <h3>🧠 5-Factor Attribution</h3>
-      <p>A Python-powered heuristic engine that scores suspect vessels based on Spatial Proximity, Temporal overlap, Trajectory, Drift vectors, and AIS dark-activity (gaps/anomalies).</p>
-    </td>
-  </tr>
-  <tr>
-    <td width="50%">
-      <h3>🗺️ Brutalist UI</h3>
-      <p>A no-nonsense, hardware-accelerated map interface. Vanilla JS, Leaflet.js, and a bespoke brutalist design system using TailwindCSS. It's fast, modular, and looks badass.</p>
-    </td>
-    <td width="50%">
-      <h3>🛰️ SAR Integration</h3>
-      <p>Pinpoint accuracy. Cross-reference precise coordinates and timestamps of detected oil spills directly onto the maritime grid.</p>
-    </td>
-  </tr>
-</table>
+| Feature | Description |
+| :--- | :--- |
+| **📡 Real-Time Global Tracking** | Ingests live WebSocket AIS streams to visualize thousands of active ships worldwide in real-time, providing immediate situational awareness. |
+| **⚖️ Advanced Attribution Engine** | Powered by a Python 5-factor heuristic algorithm evaluating *Spatial Proximity*, *Temporal Overlap*, *Trajectory Alignment*, *Drift Vectors*, and *Behavioral Anomalies*. |
+| **🗺️ High-Fidelity Interactive UI** | A highly modular, beautiful dashboard built with Vanilla JavaScript, Leaflet.js, and a bespoke brutalist design system using TailwindCSS. |
+| **🛰️ Satellite SAR Integration** | Cross-references the precise coordinates and timestamps of detected oil spills directly onto the maritime tracking grid. |
 
 ---
 
-## 🏗 Architecture
+## 🏗️ System Architecture
 
-A decoupled, three-tier setup:
+AquaTrace employs a highly decoupled, modular architecture combining a high-throughput Node.js streaming server with a rigorous Python data science backend.
 
 ```mermaid
 graph TD
-    UI[Brutalist Frontend] <-->|WSS / REST| Node[Node.js Tracker]
-    Node <-->|Raw AIS| AISStream[AISStream.io]
+    Client[Browser Frontend UI] <-->|REST / WS| Node[Node.js Live Tracking Server]
+    Node <-->|WSS| AISStream[AISStream.io Upstream]
     
-    CSV[Historical AIS] --> Engine[Python Scoring Engine]
-    Engine -->|JSON Profiles| UI
+    CSV[AIS CSV Data] --> Engine[Python Attribution Engine]
+    Engine -->|Scores & Ranks| JSON[candidates.json]
+    JSON --> Client
 ```
 
 ---
 
-## 🚀 Get Started
+## 🛠️ Technology Stack
 
-AquaTrace is split into three independent services. Run what you need.
+- **Frontend Interface:** HTML5, Vanilla JavaScript, TailwindCSS, Leaflet.js
+- **Real-Time Backend:** Node.js, Express.js, `ws` (WebSockets)
+- **Analytics Engine:** Python 3.9+, Pandas, NumPy
 
-### 1. The Tracker (Node.js)
-Fires up the WebSocket listener for live global tracking.
+---
+
+## 📂 Project Structure
+
+```text
+AquaTrace/
+├── assets/                     # 🎨 Branding and imagery
+├── frontend/                   # 🖥️ User Interface (Vanilla JS, CSS, Leaflet)
+├── aquatrace_ais/              # 🧠 Python Attribution Analytics Engine
+├── live_track_ship/            # 🌐 Node.js Live WebSocket Server
+├── data/                       # 📁 Raw AIS input datasets
+├── outputs/                    # 📊 Generated AI/Attribution reports
+├── docs/                       # 📚 Architecture & System Documentation
+└── scripts/                    # ⚙️ Utility startup scripts
+```
+
+---
+
+## 🚀 Quick Start Guide
+
+Getting AquaTrace running locally is incredibly simple. The project is split into three independent services.
+
+### 1️⃣ Start the Real-Time Server (Node.js)
+
 ```bash
 cd live_track_ship
 npm install
-cp ../.env.example ../.env  # Add your AISSTREAM_API_KEY here
+
+# Setup environment variables
+cp ../.env.example ../.env
+# IMPORTANT: Edit ../.env and add your AISSTREAM_API_KEY
+
 npm start
 ```
-*Listens on `localhost:3001`.*
+*The server will spin up on `http://localhost:3001`.*
 
-### 2. The Engine (Python)
-Crunches historical data to find the polluter.
+### 2️⃣ Run the Attribution Engine (Python)
+
 ```bash
 cd aquatrace_ais
 pip install -r requirements.txt
+
+# Execute the 5-factor scoring model
 python run_attribution.py
 ```
-*Dumps results into `outputs/attribution/candidates.json`.*
+*Analyzed results are generated and stored in `outputs/attribution/candidates.json`.*
 
-### 3. The Dashboard (Frontend)
-No build steps. No Webpack. Just pure frontend. 
-Open `frontend/index.html` in any modern browser and you're good to go.
+### 3️⃣ Launch the Dashboard (Frontend)
+
+No build steps required for the UI. Just open the `index.html` file in your preferred modern web browser.
+
+```bash
+# MacOS
+open frontend/index.html
+
+# Windows
+start frontend/index.html
+```
 
 ---
 
-## 🤝 Want to help?
+## ⚙️ Configuration
 
-We like pull requests. Read our [CONTRIBUTING.md](CONTRIBUTING.md) to get the local setup running, pick an issue, and submit a PR.
+Configure the environment by copying `.env.example` to `.env` in the root directory.
 
-<br>
+| Environment Variable | Required | Default | Description |
+|----------------------|:--------:|---------|-------------|
+| `AISSTREAM_API_KEY`  |   ✅   | *None*  | Your API key from AISStream.io |
+| `PORT`               |   ❌   | `3001`  | Port for the Node.js backend |
+| `VESSEL_STALE_TIMEOUT_MS` | ❌ | `7200000` | Timeout (2 hours) before dropping stale vessels |
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details on submitting pull requests and reporting issues. Ensure you also review our [Code of Conduct](CODE_OF_CONDUCT.md).
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
 <div align="center">
-  <p>Built for the oceans. Open sourced for everyone.</p>
+  <p>&copy; 2026 AquaTrace Team</p>
 </div>
