@@ -130,6 +130,17 @@ Configure the environment by copying `.env.example` to `.env` in the root direct
 
 ---
 
+## 👥 The Team: AmongUs
+
+AquaTrace was conceptualized, designed, and developed by **Team AmongUs**:
+
+- **Zaid Sami**
+- **Lippi Roy**
+- **Rajat Chakraborty**
+- **Drishyam Debnath**
+
+---
+
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details on submitting pull requests and reporting issues. Ensure you also review our [Code of Conduct](CODE_OF_CONDUCT.md).
@@ -139,5 +150,6 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 <div align="center">
-  <p>&copy; 2026 AquaTrace Team</p>
+  <p>Built with 🩵 by <b>Team AmongUs</b></p>
+  <p>&copy; 2026</p>
 </div>
